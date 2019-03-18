@@ -6,20 +6,17 @@ const Express = require("express");
 const BodyParser = require("body-parser");
 const MongoClient = require("mongodb").MongoClient;
 const ObjectId = require("mongodb").ObjectID;
-const sandbox = require("./sandbox");
-const imdb = require('./src/imdb');
+
+
 const ident = ["olivierdpn","Saisies73"];
 var cors = require('cors')
-const graphqlHTTP = require('express-graphql');
-const {GraphQLSchema} = require('graphql');
-const {queryType} = require('./query.js');
 
-const DENZEL_IMDB_ID = 'nm0000243';
+
 
 const CONNECTION_URL = "mongodb+srv://"+ident[0]+":"+ident[1]+"@cluster0-zaqom.mongodb.net/test?retryWrites=true";
 const DATABASE_NAME = "Movies";
 
-const router = express.Router();
+const router = Express.Router();
 router.get('/', (req, res) => {
   res.writeHead(200, { 'Content-Type': 'text/html' });
   res.write('<h1>Hello from Express.js!</h1>');
