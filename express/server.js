@@ -35,6 +35,49 @@ router.get("/movies/populate", (request, response) => {
       response.send(result);
   });
 });
+
+router.get("/movies", (request, response) => {
+  collection.findOne({"metascore" : {"$gt" : 70}}, (error, result) => {
+      if(error) {
+          return response.status(500).send(error);
+      }
+      response.send(result);
+  });
+});
+
+router.get("/movies/search", (request, response) => {
+  var limite = request.query.limit;
+  if(limite==null)limite=5;
+  else{limite =Number(request.query.limit)}
+  var metascore = request.query.metascore;
+  if(metascore==null)metascore=0;
+  else{metascore = Number(request.query.metascore)}
+  collection.find({"metascore": {"$gt":metascore} }).sort({metascore:-1}).limit(limite).toArray((error, result) => {
+      if(error) {
+          return response.status(500).send(error);
+      }
+      response.send(result);
+  });
+});
+
+router.get("/movies/:id", (request, response) => {
+  collection.findOne({ "_id": new ObjectId(request.params.id) }, (error, result) => {
+      if(error) {
+          return response.status(500).send(error);
+      }
+      response.send(result);
+  });
+});
+
+router.post("/movies/:id", (request, response) => {
+  req=request.body;
+  collection.updateOne({id:request.params.id},{$set:{date:req.date,review:req.review}},(error, result) => {           
+      if(error) {
+          return response.status(500).send(error);
+      }           
+      response.send(result)          
+  });
+});
 router.get('/another', (req, res) => res.json({ route: req.originalUrl }));
 router.post('/', (req, res) => res.json({ postBody: req.body }));
 
@@ -58,48 +101,6 @@ var database, collection;
 
 
 
-app.get("/movies", (request, response) => {
-  collection.findOne({"metascore" : {"$gt" : 70}}, (error, result) => {
-      if(error) {
-          return response.status(500).send(error);
-      }
-      response.send(result);
-  });
-});
-
-app.get("/movies/search", (request, response) => {
-  var limite = request.query.limit;
-  if(limite==null)limite=5;
-  else{limite =Number(request.query.limit)}
-  var metascore = request.query.metascore;
-  if(metascore==null)metascore=0;
-  else{metascore = Number(request.query.metascore)}
-  collection.find({"metascore": {"$gt":metascore} }).sort({metascore:-1}).limit(limite).toArray((error, result) => {
-      if(error) {
-          return response.status(500).send(error);
-      }
-      response.send(result);
-  });
-});
-
-app.get("/movies/:id", (request, response) => {
-  collection.findOne({ "_id": new ObjectId(request.params.id) }, (error, result) => {
-      if(error) {
-          return response.status(500).send(error);
-      }
-      response.send(result);
-  });
-});
-
-app.post("/movies/:id", (request, response) => {
-  req=request.body;
-  collection.updateOne({id:request.params.id},{$set:{date:req.date,review:req.review}},(error, result) => {           
-      if(error) {
-          return response.status(500).send(error);
-      }           
-      response.send(result)          
-  });
-});
 
 module.exports = app;
 module.exports.handler = serverless(app);
