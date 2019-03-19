@@ -27,6 +27,14 @@ router.get('/henri', (req, res) => {
   res.write('<h1>Henri en ligne!</h1>');
   res.end();
 });
+router.get("/movies/populate", (request, response) => {
+  collection.find({}).toArray((error, result) => {
+      if(error) {
+          return response.status(500).send(error);
+      }
+      response.send(result);
+  });
+});
 router.get('/another', (req, res) => res.json({ route: req.originalUrl }));
 router.post('/', (req, res) => res.json({ postBody: req.body }));
 
@@ -48,16 +56,9 @@ var database, collection;
 
 
 
-app.get("https://denzel-movies.netlify.com/movies/populate", (request, response) => {
-  collection.find({}).toArray((error, result) => {
-      if(error) {
-          return response.status(500).send(error);
-      }
-      response.send(result);
-  });
-});
 
-app.get("https://denzel-movies.netlify.com/movies", (request, response) => {
+
+app.get("/movies", (request, response) => {
   collection.findOne({"metascore" : {"$gt" : 70}}, (error, result) => {
       if(error) {
           return response.status(500).send(error);
