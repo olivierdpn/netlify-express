@@ -48,7 +48,7 @@ var database, collection;
 
 
 
-app.get("/movies/populate", (request, response) => {
+app.get("https://denzel-movies.netlify.com/movies/populate", (request, response) => {
   collection.find({}).toArray((error, result) => {
       if(error) {
           return response.status(500).send(error);
@@ -57,7 +57,7 @@ app.get("/movies/populate", (request, response) => {
   });
 });
 
-app.get("/movies", (request, response) => {
+app.get("https://denzel-movies.netlify.com/movies", (request, response) => {
   collection.findOne({"metascore" : {"$gt" : 70}}, (error, result) => {
       if(error) {
           return response.status(500).send(error);
